@@ -1,3 +1,15 @@
+import java.security.KeyStore
+
+// TODO: solve the Ace problem (1 or 14)?
+// TODO: how to get the highest straight
+// TODO: after getting the highest combination, focus on kickers
+
+// a function should evaluate:
+// - which hand can be made
+// - which hand is higher (easy)
+// - if equal, which hand has the highest card
+// - if equal, which collection of 5 cards has the highest card (kicker)
+
 // manier 1
 
 //class Card(_color: String, _number: Int){
@@ -23,22 +35,97 @@ class Card(val color: String, val number: Int)
 
 //class Turn(val ) <--- niet belangrijk
 
-class Hand(val cards: List<Card>)
+class Pocket(val cards: List<Card>)
+
+class HighestHand(val highestHandRank: Int, val highestCardInHighestHand: Int, val cards: List<Card>)
 
 class Table(val flop: List<Card>, val turn: Card, val river: Card){
     fun <T> merge(first: List<T>, second: List<T>): List<T> {
         return first + second
     }
 
-    fun combinations(hands: List<Hand>, flop: List<Card>, turn: Card, river: Card): String{
-        var listOfHighest = emptyList<String>()
+    fun isRoyalFlush(cardList: List<Card>): HighestHand{
+        var theFiveBestCards = listOf<Card>()
+        if (1==1){
+            theFiveBestCards = listOf<Card>(Card("harts", 10), Card("harts", 11), Card("harts", 12), Card("harts", 13), Card("harts", 14))
+        }
+        return HighestHand(1, 14, theFiveBestCards)
+    }
+    fun isStraightFlush(cardList: List<Card>): HighestHand {
+//        This doesn't work, someone can have a flush AND a Straight
+//        if (isFlush(cardList) + isFlush(cardList) < 90)
+        var theFiveBestCards = listOf<Card>()
+        var highestCard = 0
+        if (1==1){
+            theFiveBestCards = listOf<Card>()
+            highestCard = 3
+        }
+        return HighestHand(2, highestCard, theFiveBestCards)
+    }
 
-        for (hand in hands){
+    fun isQuads(cardList: List<Card>): HighestHand {
+//        This doesn't work, someone can have a flush AND a Straight
+//        if (isFlush(cardList) + isFlush(cardList) < 90)
+        var theFiveBestCards = listOf<Card>()
+        if (1==1){
+            var theFiveBestCards = listOf<Card>()
+        }
+        return HighestHand(3, 14, theFiveBestCards)
+    }
+
+    fun isFullHouse(cardList: List<Card>): Int{
+        return 99
+    }
+    fun isFlush(cardList: List<Card>): Int{
+        return 99
+    }
+    fun isStraight(cardList: List<Card>): Int{
+        return 99
+    }
+    fun isTrips(cardList: List<Card>): Int{
+        return 99
+    }
+
+    fun isTwoPair(cardList: List<Card>): Int{
+        return 99
+    }
+
+    fun isPair(cardList: List<Card>): Int{
+        return 99
+    }
+
+    fun isHighCard(cardList: List<Card>): Int{
+        return 99
+    }
+
+    fun combinations(pockets: List<Pocket>, table: Table): String{
+        val listOfHighest = emptyList<String>()
+
+        for (pocket in pockets){
             println('1')
-            println(hand)
-            var cardlist = listOf<Card>(hand.cards.elementAt(0), hand.cards.elementAt(1), flop.elementAt(0), flop.elementAt(1), flop.elementAt(2), turn, river)
-            println(cardlist)
-
+            println(pocket)
+            var cardList = listOf<Card>(pocket.cards.elementAt(0), pocket.cards.elementAt(1), flop.elementAt(0), flop.elementAt(1), flop.elementAt(2), turn, river)
+            println(cardList)
+            if (isRoyalFlush(cardList).cards != listOf<Card>())
+                listOfHighest + isRoyalFlush(cardList)
+            else if (isStraightFlush(cardList).cards != listOf<Card>())
+                listOfHighest + isStraightFlush(cardList)
+            else if (isQuads(cardList).cards != listOf<Card>())
+                listOfHighest + isQuads(cardList)
+//            else if (isFullHouse(cardList) != 99)
+//                listOfHighest + HighestHand(4, highestCardInHighestHand = isFullHouse(cardList))
+//            else if (isFlush(cardList) != 99)
+//                listOfHighest + HighestHand(5, highestCardInHighestHand = isFlush(cardList))
+//            else if (isStraight(cardList) != 99)
+//                listOfHighest + HighestHand(6, highestCardInHighestHand = isStraight(cardList))
+//            else if (isTrips(cardList) != 99)
+//                listOfHighest + HighestHand(7, highestCardInHighestHand = isTrips(cardList))
+//            else if (isTwoPair(cardList) != 99)
+//                listOfHighest + HighestHand(8, highestCardInHighestHand = isTwoPair(cardList))
+//            else if (isPair(cardList) != 99)
+//                listOfHighest + HighestHand(9, highestCardInHighestHand = isPair(cardList))
+            else
+                listOfHighest + isHighCard(cardList)
         }
 
         val winner = "0"
@@ -46,7 +133,7 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card){
     }
 }
 
-class Player(val name: String, val hand: Hand, val chips: Int)
+class Player(val name: String, val pocket: Pocket, val chips: Int)
 
 class Deck{
     var colors = arrayOf("clubs", "hearts", "spades", "diamonds")
@@ -89,11 +176,11 @@ fun main() {
 //  1.  Original code
     val firstCard = Deck().getCard(shuffledDeck).first
     shuffledDeck = Deck().getCard(shuffledDeck).second
-    val firstHand = Hand(listOf(firstCard))
-//    var Bram = Player("Bram", firstHand, 10)
+    val firstPocket = Pocket(listOf(firstCard))
+//    var Bram = Player("Bram", firstPocket, 10)
     val secondCard = Deck().getCard(shuffledDeck).first
-    val secondHand = Hand(listOf(secondCard))
-//    var Charles = Player("Charles", secondHand, 10)
+    val secondPocket = Pocket(listOf(secondCard))
+//    var Charles = Player("Charles", secondPocket, 10)
 
 
 //    print("Bram got ${firstCard.number} of ${firstCard.color} while Charles got ${secondCard.number} of ${secondCard.color}")
@@ -102,22 +189,25 @@ fun main() {
     val players = listOf<String>("Bram", "Charles")
 //    we need to save the player somewhere... a for loop over players that creates instances?
     for (player in players)
-        Player(player, Hand(listOf(Deck().getCard(shuffledDeck).first)), 10)
+        Player(player, Pocket(listOf(Deck().getCard(shuffledDeck).first)), 10)
         shuffledDeck = Deck().getCard(shuffledDeck).second
     for (player in players)
-        Player(player, Hand(listOf(Deck().getCard(shuffledDeck).first)), 10)
+        Player(player, Pocket(listOf(Deck().getCard(shuffledDeck).first)), 10)
         shuffledDeck = Deck().getCard(shuffledDeck).second
 
 //  3.  Alternative
-    var Bram = Player("Bram", hand = Hand(listOf(shuffledDeck.elementAt(0),shuffledDeck.elementAt(2))), 10)
-    var Charles = Player("Bram", hand = Hand(listOf(shuffledDeck.elementAt(1),shuffledDeck.elementAt(3))), 10)
-    print("Bram got ${Bram.hand.cards.elementAt(0).number} of ${Bram.hand.cards.elementAt(0).color} and " +
-            "${Bram.hand.cards.elementAt(1).number} of ${Bram.hand.cards.elementAt(1).color} " +
-            "while Charles got ${Charles.hand.cards.elementAt(0).number} of ${Charles.hand.cards.elementAt(0).color} and " +
-            "${Charles.hand.cards.elementAt(1).number} of ${Charles.hand.cards.elementAt(1).color} "
+    var Bram = Player("Bram", pocket = Pocket(listOf(shuffledDeck.elementAt(0),shuffledDeck.elementAt(2))), 10)
+    var Charles = Player("Bram", pocket = Pocket(listOf(shuffledDeck.elementAt(1),shuffledDeck.elementAt(3))), 10)
+    shuffledDeck = shuffledDeck.drop(5) // include 1 burner card
+    print("Bram got ${Bram.pocket.cards.elementAt(0).number} of ${Bram.pocket.cards.elementAt(0).color} and " +
+            "${Bram.pocket.cards.elementAt(1).number} of ${Bram.pocket.cards.elementAt(1).color} " +
+            "while Charles got ${Charles.pocket.cards.elementAt(0).number} of ${Charles.pocket.cards.elementAt(0).color} and " +
+            "${Charles.pocket.cards.elementAt(1).number} of ${Charles.pocket.cards.elementAt(1).color} "
     )
 
-    val fullTableExample = Table(listOf(card, card, card), card, card)
+    val flop = listOf(card, card, card); val turn = card; val river = card
+    val table = Table(flop, turn, river)
+    Table(flop, turn, river).combinations(pockets = listOf(Bram.pocket, Charles.pocket), table = table)
 
 //    val deck = Deck(mutableListOf(card))
 //    for (color in colors)
