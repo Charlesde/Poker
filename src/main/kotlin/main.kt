@@ -4,7 +4,7 @@ import java.lang.Exception
 // TODO: solve the Ace problem (1 or 14)? DONE
 // TODO: how to get the highest straight DONE
 // TODO: after getting the highest combination, focus on kickers
-// TODO: Fullhouse with secondpair
+// TODO: Fullhouse with otherPair
 // Todo: Straight & Royal flush (obsolete as ace high will win)
 
 // a function should evaluate:
@@ -12,6 +12,14 @@ import java.lang.Exception
 // - which hand is higher (easy)
 // - if equal, which hand has the highest card
 // - if equal, which collection of 5 cards has the highest card (kicker)
+
+
+// edge cases:
+// ace ace ace ten ten ten two should be full house
+// ace ace ace ten ten ten ten should be quads
+// ace, 2,3,4,5,6 should be straight 6 high
+// ace, ace, 2, 2, 3, 3 should be two pair ace,3
+// queen, queen, ace, ace, king, king, king, should be full house with aces, king high
 
 
 // manier 1
@@ -39,7 +47,7 @@ class Card(val color: String, val number: Int)
 
 class Pocket(val cards: List<Card>)
 
-class HighestHand(val highestHandRank: Int, val highestCardInHighestHand: Int, val kickerNumbers: List<Int>, val secondPair: Int = 0){
+class HighestHand(val highestHandRank: Int, val highestCardInHighestHand: Int, val kickerNumbers: List<Int>, val otherPair: Int = 0){
 }
 
 // ik zou graag .number als parameter opnemen, kan dat?
@@ -125,15 +133,27 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card){
 //        return HighestHand(8, 14, kickerNumbers)
 //    }
     fun isStraightFlush(cardList: List<Card>): HighestHand {
-//        This doesn't work, someone can have a flush AND a Straight
-//        if (isFlush(cardList) + isFlush(cardList) < 90)
-        var kickerNumbers = listOf<Int>()
-        var highestCard = 0
-        if (1==0){
-            kickerNumbers = listOf<Int>()
-            highestCard = 3
+        val relevantElements = getColor(cardList).toMutableList()
+        val colorOfPossibleFlushcards = relevantElements.groupingBy { it }.eachCount().filter { it.value > 4 }.keys
+        var highestCardInHighestHand = 0
+        var highestNumbers = listOf<Int>()
+        if (colorOfPossibleFlushcards.isNotEmpty()) {
+            //            println("Flush with color ${colorOfPossibleFlushcards.first()}!")
+            val possibleFlushCards = selectColor(cardList, colorOfPossibleFlushcards.first())
+            println(possibleFlushCards)
+            val straightFlush = checkForConsec(possibleFlushCards).toMutableList()
+            if (straightFlush.isNotEmpty()){
+                straightFlush.sortDescending()
+                highestCardInHighestHand = straightFlush.first()
+                if (highestCardInHighestHand == 14) {
+                    println("holy shit, a ROYAL FLUSH! Which is part of a ...")
+                }
+                else{
+                    highestNumbers = listOf(0)
+                }
+            }
         }
-        return HighestHand(8, highestCard, kickerNumbers)
+    return HighestHand(8, highestCardInHighestHand, kickerNumbers = highestNumbers)
     }
 
     fun isQuads(cardList: List<Card>): HighestHand {
@@ -152,9 +172,22 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card){
         return HighestHand(7, highestCardInHighestHand, kickerNumbers)
     }
 
-    fun isFullHouse(cardList: List<Card>): Int{
-        return 99
+    fun isFullHouse(cardList: List<Card>): HighestHand {
+        val relevantElements = getNumber(cardList).toMutableList()
+        var highestCardInHighestHand = 0
+        var highestPair: Int = 0
+        val listOfTripsMoreThanOneTime = relevantElements.groupingBy { it }.eachCount().filter { it.value > 2 }.keys
+        if (listOfTripsMoreThanOneTime.isNotEmpty()){
+            highestCardInHighestHand = listOfTripsMoreThanOneTime.first()
+            relevantElements.removeAll{ it == highestCardInHighestHand }
+            val listOfPairsMoreThanOneTime = relevantElements.groupingBy { it }.eachCount().filter { it.value > 1 }.keys
+            if (listOfPairsMoreThanOneTime.isNotEmpty()){
+                highestPair = listOfPairsMoreThanOneTime.first()
+            }
+        }
+        return HighestHand(2, highestCardInHighestHand, kickerNumbers = listOf(0), otherPair = highestPair)
     }
+
 
     fun isFlush(cardList: List<Card>): HighestHand {
         val relevantElements = getColor(cardList).toMutableList()
@@ -206,7 +239,6 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card){
         var secondHighestPair: Int = 0
         var kickerNumbers = listOf<Int>()
         val listOfValuesMoreThanOneTime = relevantElements.groupingBy { it }.eachCount().filter { it.value > 1 }.keys
-//        println("hi ${listOfValuesMoreThanOneTime.size}")
         if (listOfValuesMoreThanOneTime.size > 1){
             listOfValuesMoreThanOneTime.sortedDescending()
             highestCardInHighestHand = listOfValuesMoreThanOneTime.first()
@@ -215,10 +247,9 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card){
 //            println(secondHighestPair)
             relevantElements.removeAll{ it == secondHighestPair }
             relevantElements.sortDescending()
-//            println(relevantElements)
             kickerNumbers = kickerNumbers + relevantElements.elementAt(0)
         }
-        return HighestHand(2, highestCardInHighestHand, kickerNumbers, secondPair = secondHighestPair)
+        return HighestHand(2, highestCardInHighestHand, kickerNumbers, otherPair = secondHighestPair)
     }
 
     fun isPair(cardList: List<Card>): HighestHand {
@@ -267,7 +298,6 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card){
                 hand = isQuads(cardList)
                 listOfHighest.add(hand)
                 print(" with value ${hand.highestCardInHighestHand} ")
-                println("and the kickers ${hand.kickerNumbers}")
             }
 
             else if (isQuads(cardList).kickerNumbers != listOf<Int>()) {
@@ -278,8 +308,13 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card){
                 println("and the kickers ${hand.kickerNumbers}")
             }
 
-//            else if (isFullHouse(cardList) != 99)
-//                listOfHighest + HighestHand(4, highestCardInHighestHand = isFullHouse(cardList))
+            else if (isFullHouse(cardList).otherPair != 0) {
+                print("FULL HOUSE")
+                hand = isFullHouse(cardList)
+                listOfHighest.add(hand)
+                print(" with trips value ${hand.highestCardInHighestHand} ")
+                println("and the pair ${hand.otherPair}")
+            }
 
             else if (isFlush(cardList).kickerNumbers != listOf<Int>()){
                 print("a FLUSH")
@@ -309,8 +344,9 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card){
                 print("TWO PAIR")
                 hand = isTwoPair(cardList)
                 listOfHighest.add(hand)
-                print(" with value ${hand.highestCardInHighestHand} ")
-                println("and the kickers ${hand.kickerNumbers}")
+                print(" with value ${hand.highestCardInHighestHand}, ")
+                print("secondly ${hand.otherPair} ")
+                println("and the kicker ${hand.kickerNumbers}")
             }
 
             else if (isPair(cardList).kickerNumbers != listOf<Int>()) {
@@ -375,9 +411,9 @@ fun main() {
     }
 
 //    TESTCARDS DON'T DELETE
-    val flop = listOf(Card("clubs", 14), Card("clubs", 2), Card("hearts", 3));
-    val turn = Card("hearts", 4);
-    val river = Card("bla", 5)
+    val flop = listOf(Card("clubs", 2), Card("clubs", 3), Card("clubs", 4));
+    val turn = Card("clubs", 5);
+    val river = Card("clubs", 6)
 
     var burnerCard = 1
 //    val flop = listOf(shuffledDeck.elementAt(players.size * 2 + burnerCard), shuffledDeck.elementAt(players.size * 2 + burnerCard + 1), shuffledDeck.elementAt(players.size * 2 + burnerCard + 2));
