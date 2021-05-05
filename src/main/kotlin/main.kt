@@ -1,14 +1,18 @@
 import java.awt.image.MultiPixelPackedSampleModel
+import java.lang.Exception
 
-// TODO: solve the Ace problem (1 or 14)?
-// TODO: how to get the highest straight
+// TODO: solve the Ace problem (1 or 14)? DONE
+// TODO: how to get the highest straight DONE
 // TODO: after getting the highest combination, focus on kickers
+// TODO: Fullhouse with secondpair
+// Todo: Straight & Royal flush (obsolete as ace high will win)
 
 // a function should evaluate:
 // - which hand can be made
 // - which hand is higher (easy)
 // - if equal, which hand has the highest card
 // - if equal, which collection of 5 cards has the highest card (kicker)
+
 
 // manier 1
 
@@ -33,15 +37,12 @@ import java.awt.image.MultiPixelPackedSampleModel
 // Manier 3 (declare property directly in primairy constructor)
 class Card(val color: String, val number: Int)
 
-//class Turn(val ) <--- niet belangrijk
-
 class Pocket(val cards: List<Card>)
 
-class HighestHand(val highestHandRank: Int, val highestCardInHighestHand: Int, val kickerNumbers: List<Int>){
+class HighestHand(val highestHandRank: Int, val highestCardInHighestHand: Int, val kickerNumbers: List<Int>, val secondPair: Int = 0){
 }
 
 // ik zou graag .number als parameter opnemen, kan dat?
-
 fun getNumber(cardList: List<Card>): List<Int>{
     val relevantElements = mutableListOf<Int>()
     for (card in cardList){
@@ -67,18 +68,62 @@ fun selectColor(cardList: List<Card>, cardColor: String): MutableList<Int>{
     return relevantElements
 }
 
+fun checkForConsec(numberList: MutableList<Int>): MutableList<Int>{
+    var previousnumber: Int = 0
+    var streak: MutableList<Int> = mutableListOf()
+//    println("0. $numberList")
+    val numberList = numberList.toMutableSet().toMutableList()
+    if(14 in numberList){
+        numberList.add(1)
+    }
+//    println("1. $numberList")
+    numberList.sort()
+//    println("2. $numberList")
+    for (number in numberList){
+        if (previousnumber != 0) {
+//            println("3b. not first")
+            if (number - previousnumber == 1) {
+                streak.add(number)
+//                println("4. $previousnumber consec $number so streak is $streak")
+            }
+            else {
+                if (streak.size > 4){
+//                    println("the streak ends here")
+                    break
+                }
+                streak = mutableListOf()
+//                println("5. $previousnumber non-consec $number so streak is $streak")
+            }
+            previousnumber = number
+//            println("6. the prev number is now $previousnumber")
+        }
+        else {
+            previousnumber = number
+            streak.add(number)
+//            println("3a. first, prev number is $previousnumber")
+        }
+        previousnumber = number
+    }
+    if(streak.size > 4){
+        streak.takeLast(5)
+//        println("the streak is $streak")
+    }
+    return streak
+}
+
+
 class Table(val flop: List<Card>, val turn: Card, val river: Card){
     fun <T> merge(first: List<T>, second: List<T>): List<T> {
         return first + second
     }
 
-    fun isRoyalFlush(cardList: List<Card>): HighestHand{
-        var kickerNumbers = listOf<Int>()
-        if (1==0){
-            kickerNumbers = listOf<Int>()
-        }
-        return HighestHand(1, 14, kickerNumbers)
-    }
+//    fun isRoyalFlush(cardList: List<Card>): HighestHand{
+//        var kickerNumbers = listOf<Int>()
+//        if (1==0){
+//            kickerNumbers = listOf<Int>()
+//        }
+//        return HighestHand(8, 14, kickerNumbers)
+//    }
     fun isStraightFlush(cardList: List<Card>): HighestHand {
 //        This doesn't work, someone can have a flush AND a Straight
 //        if (isFlush(cardList) + isFlush(cardList) < 90)
@@ -88,7 +133,7 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card){
             kickerNumbers = listOf<Int>()
             highestCard = 3
         }
-        return HighestHand(2, highestCard, kickerNumbers)
+        return HighestHand(8, highestCard, kickerNumbers)
     }
 
     fun isQuads(cardList: List<Card>): HighestHand {
@@ -104,7 +149,7 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card){
             kickerNumbers = (kickerNumbers + relevantElements.max()!!)
 //            println("and the kicker ${kickerNumbers.first()}")
         }
-        return HighestHand(3, highestCardInHighestHand, kickerNumbers)
+        return HighestHand(7, highestCardInHighestHand, kickerNumbers)
     }
 
     fun isFullHouse(cardList: List<Card>): Int{
@@ -127,9 +172,18 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card){
         return HighestHand(5, highestCardInHighestHand, highestNumbers)
     }
 
-    fun isStraight(cardList: List<Card>): Int{
-        return 99
+    fun isStraight(cardList: List<Card>): HighestHand {
+        val relevantElements = getNumber(cardList).toMutableList()
+        var highestCardInHighestHand = 0
+        var kickerNumbers = mutableListOf<Int>()
+        if (checkForConsec(relevantElements).isNotEmpty()){
+            kickerNumbers = checkForConsec(relevantElements).toMutableList()
+            kickerNumbers.sortDescending()
+            highestCardInHighestHand = kickerNumbers.first()
+            }
+        return HighestHand(4, highestCardInHighestHand, kickerNumbers.take(5))
     }
+
     fun isTrips(cardList: List<Card>): HighestHand {
         val relevantElements = getNumber(cardList).toMutableList()
         var highestCardInHighestHand = 0
@@ -140,14 +194,31 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card){
             highestCardInHighestHand = listOfValuesMoreThanTwoTimes.first()
             relevantElements.removeAll{ it == highestCardInHighestHand }
             relevantElements.sortDescending()
-            kickerNumbers = kickerNumbers + relevantElements.take(3)
+            kickerNumbers = kickerNumbers + relevantElements.take(2)
 //            println("and the kickers $kickerNumbers")
         }
-        return HighestHand(7, highestCardInHighestHand, kickerNumbers)
+        return HighestHand(3, highestCardInHighestHand, kickerNumbers)
     }
 
-    fun isTwoPair(cardList: List<Card>): Int{
-        return 99
+    fun isTwoPair(cardList: List<Card>): HighestHand {
+        val relevantElements = getNumber(cardList).toMutableList()
+        var highestCardInHighestHand = 0
+        var secondHighestPair: Int = 0
+        var kickerNumbers = listOf<Int>()
+        val listOfValuesMoreThanOneTime = relevantElements.groupingBy { it }.eachCount().filter { it.value > 1 }.keys
+//        println("hi ${listOfValuesMoreThanOneTime.size}")
+        if (listOfValuesMoreThanOneTime.size > 1){
+            listOfValuesMoreThanOneTime.sortedDescending()
+            highestCardInHighestHand = listOfValuesMoreThanOneTime.first()
+            relevantElements.removeAll{ it == highestCardInHighestHand }
+            secondHighestPair = listOfValuesMoreThanOneTime.elementAt(1)
+//            println(secondHighestPair)
+            relevantElements.removeAll{ it == secondHighestPair }
+            relevantElements.sortDescending()
+//            println(relevantElements)
+            kickerNumbers = kickerNumbers + relevantElements.elementAt(0)
+        }
+        return HighestHand(2, highestCardInHighestHand, kickerNumbers, secondPair = secondHighestPair)
     }
 
     fun isPair(cardList: List<Card>): HighestHand {
@@ -160,9 +231,9 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card){
             relevantElements.removeAll{ it == highestCardInHighestHand }
             relevantElements.sortDescending()
 //            println(relevantElements)
-            kickerNumbers = kickerNumbers + relevantElements.take(2)
+            kickerNumbers = kickerNumbers + relevantElements.take(3)
         }
-        return HighestHand(9, highestCardInHighestHand, kickerNumbers)
+        return HighestHand(1, highestCardInHighestHand, kickerNumbers)
     }
 
     fun isHighCard(cardList: List<Card>): HighestHand {
@@ -171,28 +242,34 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card){
         val highestCardInHighestHand = relevantElements.take(1).first()
         val kickerNumbers = relevantElements.subList(1, 5)
 //        println(kickerNumbers)
-        return HighestHand(10, highestCardInHighestHand, kickerNumbers)
+        return HighestHand(0, highestCardInHighestHand, kickerNumbers)
     }
 
     fun combinations(players: List<Player>, table: Table): String{
         var hand: HighestHand
         var listOfHighest = mutableListOf<HighestHand>()
+
         println("On the table lies ${flop.elementAt(0).number} of ${flop.elementAt(0).color}, ${flop.elementAt(1).number} of ${flop.elementAt(1).color}, ${flop.elementAt(2).number} of ${flop.elementAt(2).color}, ${turn.number} of ${turn.color}, and ${river.number} of ${river.color}")
+
         for (player in players){
             println()
             println("The player with the name ${player.name} has ...")
             var cardList = listOf<Card>(player.pocket.cards.elementAt(0), player.pocket.cards.elementAt(1), flop.elementAt(0), flop.elementAt(1), flop.elementAt(2), turn, river)
-            if (isRoyalFlush(cardList).kickerNumbers != listOf<Int>()) {
-                println("ROYAL FLUSH!!!!!")
-                listOfHighest.add(isRoyalFlush(cardList))
-            }
-            else if (isStraightFlush(cardList).kickerNumbers != listOf<Int>()) {
+
+//            Royalflush is obsolete
+//            if (isRoyalFlush(cardList).kickerNumbers != listOf<Int>()) {
+//                println("ROYAL FLUSH!!!!!")
+//                listOfHighest.add(isRoyalFlush(cardList))
+//            }
+
+            if (isStraightFlush(cardList).kickerNumbers != listOf<Int>()) {
                 print("a STRAIGHT FLUSH")
                 hand = isQuads(cardList)
                 listOfHighest.add(hand)
                 print(" with value ${hand.highestCardInHighestHand} ")
                 println("and the kickers ${hand.kickerNumbers}")
             }
+
             else if (isQuads(cardList).kickerNumbers != listOf<Int>()) {
                 print("QUADS")
                 hand = isQuads(cardList)
@@ -200,8 +277,10 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card){
                 print(" with value ${hand.highestCardInHighestHand} ")
                 println("and the kickers ${hand.kickerNumbers}")
             }
+
 //            else if (isFullHouse(cardList) != 99)
 //                listOfHighest + HighestHand(4, highestCardInHighestHand = isFullHouse(cardList))
+
             else if (isFlush(cardList).kickerNumbers != listOf<Int>()){
                 print("a FLUSH")
                 hand = isFlush(cardList)
@@ -209,8 +288,15 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card){
                 print(" with value ${hand.highestCardInHighestHand} ")
                 println("and the kickers ${hand.kickerNumbers}")
             }
-//            else if (isStraight(cardList) != 99)
-//                listOfHighest + HighestHand(6, highestCardInHighestHand = isStraight(cardList))
+
+            else if (isStraight(cardList).kickerNumbers != listOf<Int>()){
+                print("a STRAIGHT")
+                hand = isStraight(cardList)
+                listOfHighest.add(hand)
+                print(" with value ${hand.highestCardInHighestHand} ")
+                println("and the kickers ${hand.kickerNumbers}")
+            }
+
             else if (isTrips(cardList).kickerNumbers != listOf<Int>()){
                 print("TRIPS")
                 hand = isTrips(cardList)
@@ -219,8 +305,14 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card){
                 println("and the kickers ${hand.kickerNumbers}")
             }
 
-//            else if (isTwoPair(cardList) != 99)
-//                listOfHighest + HighestHand(8, highestCardInHighestHand = isTwoPair(cardList))
+            else if (isTwoPair(cardList).kickerNumbers != listOf<Int>()){
+                print("TWO PAIR")
+                hand = isTwoPair(cardList)
+                listOfHighest.add(hand)
+                print(" with value ${hand.highestCardInHighestHand} ")
+                println("and the kickers ${hand.kickerNumbers}")
+            }
+
             else if (isPair(cardList).kickerNumbers != listOf<Int>()) {
                 print("a PAIR ")
                 hand = isPair(cardList)
@@ -235,7 +327,8 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card){
                 println("high card with highest being ${hand.highestCardInHighestHand}")
             }
         }
-        println("The list of highest is $listOfHighest")
+        println()
+        println("The list of highest hands is $listOfHighest")
         val winner = "0"
         return winner
     }
@@ -246,11 +339,11 @@ class Player(val name: String, val pocket: Pocket, val chips: Int)
 class Deck{
     var colors = arrayOf("clubs", "hearts", "spades", "diamonds")
 
-//    create member function
     fun deck(): List<Card>{
         var cards = emptyList<Card>()//()MutableList<Card>()
         for (color in colors)
-            for (number in 1..13)
+//            Ace = 14, only change to 1 to check for straights, and then count as such
+            for (number in 2..14)
                 cards += Card(color, number)
         return cards
     }
@@ -266,70 +359,33 @@ class Deck{
     }
 }
 
-// Test
 fun main() {
     var listOfPlayer: MutableList<Player> = mutableListOf()
     var players = listOf<String>("Bram", "Charles")
     var chips = 10
-//    val card = Card("clubs", 2)
-//    println(card.color)
-//    val table = Table(listOf(card, card, card), card, card)
-//    println(table.flop)
-//    println(table.turn.color)
-//    println(table.river.color)
-//    val hand = Hand(listOf(card, card))
-//    println(hand.cards)
-
     val deck = Deck().deck()
-//    println(deck)
     var shuffledDeck = Deck().shuffle(deck)
-//    println(shuffledDeck)
 
-//  1.  Original code
-//    val firstCard = Deck().getCard(shuffledDeck).first
-//    shuffledDeck = Deck().getCard(shuffledDeck).second
-//    val firstPocket = Pocket(listOf(firstCard))
-////    var Bram = Player("Bram", firstPocket, 10)
-//    val secondCard = Deck().getCard(shuffledDeck).first
-//    val secondPocket = Pocket(listOf(secondCard))
-////    var Charles = Player("Charles", secondPocket, 10)
-
-
-//    print("Bram got ${firstCard.number} of ${firstCard.color} while Charles got ${secondCard.number} of ${secondCard.color}")
-
-//  2.  Alternative <--- doesn't work...
-//    val players = listOf<String>("Bram", "Charles")
-////    we need to save the player somewhere... a for loop over players that creates instances?
-//    for (player in players)
-//        Player(player, Pocket(listOf(Deck().getCard(shuffledDeck).first)), 10)
-//        shuffledDeck = Deck().getCard(shuffledDeck).second
-//    for (player in players)
-//        Player(player, Pocket(listOf(Deck().getCard(shuffledDeck).first)), 10)
-//        shuffledDeck = Deck().getCard(shuffledDeck).second
-
-//  3.  Alternative: question: how to create players/instances in a for loop?
-//    var Bram = Player("Bram", pocket = Pocket(listOf(shuffledDeck.elementAt(0),shuffledDeck.elementAt(2))), 10)
-//    var Charles = Player("Charles", pocket = Pocket(listOf(shuffledDeck.elementAt(1),shuffledDeck.elementAt(3))), 10)
-//    shuffledDeck = shuffledDeck.drop(5) // include 1 burner card <-- not really necessary, just pick 6 below
-//    println("Bram got ${Bram.pocket.cards.elementAt(0).number} of ${Bram.pocket.cards.elementAt(0).color} and " +
-//            "${Bram.pocket.cards.elementAt(1).number} of ${Bram.pocket.cards.elementAt(1).color} " +
-//            "while Charles got ${Charles.pocket.cards.elementAt(0).number} of ${Charles.pocket.cards.elementAt(0).color} and " +
-//            "${Charles.pocket.cards.elementAt(1).number} of ${Charles.pocket.cards.elementAt(1).color} "
-//    )
     for (player in players){
         val seat = players.indexOf(player)
-        listOfPlayer.add(Player(name = player, pocket = Pocket(listOf(shuffledDeck.elementAt(seat),shuffledDeck.elementAt(seat + players.size))), chips = 10))
+        listOfPlayer.add(Player(name = player, pocket = Pocket(listOf(shuffledDeck.elementAt(seat),shuffledDeck.elementAt(seat + players.size))), chips = chips))
         println("$player got ${listOfPlayer.elementAt(seat).pocket.cards.elementAt(0).number} of ${listOfPlayer.elementAt(seat).pocket.cards.elementAt(0).color} and" +
                 " ${listOfPlayer.elementAt(seat).pocket.cards.elementAt(1).number} of ${listOfPlayer.elementAt(seat).pocket.cards.elementAt(1).color}"
         )
     }
 
-//    val flop = listOf(Card("clubs", 2), Card("clubs", 1), Card("hearts", 1));
-    val flop = listOf(Card("clubs", 2), Card("clubs", 1), Card("hearts", 1));
-    val turn = Card("hearts", 1);
-    val river = Card("hearts", 5)
+//    TESTCARDS DON'T DELETE
+    val flop = listOf(Card("clubs", 14), Card("clubs", 2), Card("hearts", 3));
+    val turn = Card("hearts", 4);
+    val river = Card("bla", 5)
+
+    var burnerCard = 1
+//    val flop = listOf(shuffledDeck.elementAt(players.size * 2 + burnerCard), shuffledDeck.elementAt(players.size * 2 + burnerCard + 1), shuffledDeck.elementAt(players.size * 2 + burnerCard + 2));
+//    burnerCard += 1
+//    val turn = shuffledDeck.elementAt(players.size * 2 + burnerCard + 3);
+//    burnerCard += 1
+//    val river = shuffledDeck.elementAt(players.size * 2 + burnerCard + 4)
     val table = Table(flop, turn, river)
     Table(flop, turn, river).combinations(players = listOfPlayer, table = table)
-
 }
 
