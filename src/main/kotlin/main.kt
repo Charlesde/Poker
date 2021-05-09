@@ -13,13 +13,51 @@ import java.lang.Exception
 // - if equal, which hand has the highest card
 // - if equal, which collection of 5 cards has the highest card (kicker)
 
-
 // edge cases:
 // ace ace ace ten ten ten two should be full house
 // ace ace ace ten ten ten ten should be quads
 // ace, 2,3,4,5,6 should be straight 6 high
 // ace, ace, 2, 2, 3, 3 should be two pair ace,3
 // queen, queen, ace, ace, king, king, king, should be full house with aces, king high
+
+fun insertPlayers(players: List<String> = listOf("Bram", "Charles")): List<String>{
+//    var players = listOf<String>("Bram", "Charles")
+    if (players.size != players.distinct().size){
+        println("Player name already picked")
+    }
+    return players
+}
+
+fun main() {
+    var players = insertPlayers()
+    var chips = 10
+    val deck = Deck().deck()
+    var shuffledDeck = Deck().shuffle(deck)
+    var listOfPlayer = Dealcards(players, shuffledDeck, 10)
+//    ######################
+//    TESTCARDS DON'T DELETE
+//    listOfPlayer = mutableListOf(
+//        Player("Bram", Pocket(listOf(Card("f", 13), Card("clubs", 7))), 10),
+//        Player("Charles", Pocket(listOf(Card("f", 13), Card("clubs", 6))), 10)
+//    )
+//    val flop = listOf(Card("clubs", 14), Card("eg", 12), Card("ge", 1));
+//    val turn = Card("rg", 4);
+//    val river = Card("clurbs", 5)
+//    ######################
+
+    var burnerCard = 1
+    val flop = listOf(shuffledDeck.elementAt(players.size * 2 + burnerCard),
+        shuffledDeck.elementAt(players.size * 2 + burnerCard + 1),
+        shuffledDeck.elementAt(players.size * 2 + burnerCard + 2));
+
+    burnerCard += 1
+    val turn = shuffledDeck.elementAt(players.size * 2 + burnerCard + 3);
+    burnerCard += 1
+    val river = shuffledDeck.elementAt(players.size * 2 + burnerCard + 4)
+    val table = Table(flop, turn, river)
+    Table(flop, turn, river).combinations(players = listOfPlayer, table = table)
+}
+
 
 
 // manier 1
@@ -397,17 +435,17 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card){
 
 //      Check if equal kickers
                     for (kicker in 0 until kickerLists[0].size){
-                        println("kicker $kicker")
+//                        println("kicker $kicker")
                         var playerScoreList = mutableListOf<Int>()
                         for (player in 0 until kickerLists.size){
-                            println("player $player")
-                            println("card ${kickerLists[player][kicker]}")
+//                            println("player $player")
+//                            println("card ${kickerLists[player][kicker]}")
                             playerScoreList.add(kickerLists[player][kicker])
                         }
                         var bestKicker = playerScoreList.maxOrNull()
-                        println("bestkicker $bestKicker")
-                        println("playerScoreList $playerScoreList")
-                        println("bestkicker ${playerScoreList.filter{it == bestKicker!!}.size}")
+//                        println("bestkicker $bestKicker")
+//                        println("playerScoreList $playerScoreList")
+//                        println("bestkicker ${playerScoreList.filter{it == bestKicker!!}.size}")
                         if (playerScoreList.filter{it != bestKicker!!}.size == 1){
                             println("Player ${players[playerScoreList.indexOf(bestKicker)].name} is the winner with a $bestKicker")
                             break
@@ -466,23 +504,8 @@ class Deck{
     }
 }
 
-fun main() {
+fun Dealcards(players: List<String>, shuffledDeck: List<Card>, chips: Int): MutableList<Player> {
     var listOfPlayer: MutableList<Player> = mutableListOf()
-    var players = listOf<String>("Bram", "Charles")
-    var chips = 10
-    val deck = Deck().deck()
-    var shuffledDeck = Deck().shuffle(deck)
-
-//    ######################
-//    TESTCARDS DON'T DELETE
-//    listOfPlayer = mutableListOf(
-//        Player("Bram", Pocket(listOf(Card("f", 13), Card("clubs", 7))), 10),
-//        Player("Charles", Pocket(listOf(Card("f", 13), Card("clubs", 6))), 10)
-//    )
-//    val flop = listOf(Card("clubs", 14), Card("eg", 12), Card("ge", 1));
-//    val turn = Card("rg", 4);
-//    val river = Card("clurbs", 5)
-//    ######################
     for (player in players){
         val seat = players.indexOf(player)
         listOfPlayer.add(Player(name = player, pocket = Pocket(listOf(shuffledDeck.elementAt(seat),shuffledDeck.elementAt(seat + players.size))), chips = chips))
@@ -490,13 +513,8 @@ fun main() {
                 " ${listOfPlayer.elementAt(seat).pocket.cards.elementAt(1).number} of ${listOfPlayer.elementAt(seat).pocket.cards.elementAt(1).color}"
         )
     }
-    var burnerCard = 1
-    val flop = listOf(shuffledDeck.elementAt(players.size * 2 + burnerCard), shuffledDeck.elementAt(players.size * 2 + burnerCard + 1), shuffledDeck.elementAt(players.size * 2 + burnerCard + 2));
-    burnerCard += 1
-    val turn = shuffledDeck.elementAt(players.size * 2 + burnerCard + 3);
-    burnerCard += 1
-    val river = shuffledDeck.elementAt(players.size * 2 + burnerCard + 4)
-    val table = Table(flop, turn, river)
-    Table(flop, turn, river).combinations(players = listOfPlayer, table = table)
+    return listOfPlayer
 }
+
+
 
