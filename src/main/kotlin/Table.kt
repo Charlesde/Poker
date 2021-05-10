@@ -1,6 +1,9 @@
-// TODO: This might seem a lot for one class, but it all related to the 'final' step of the process.
+// TODO: same issues as in main... importing from repo gives error
+//import repository.ResultOfRound as ResultOfRound
+data class ResultOfRound(val winner: String, val handlist: MutableList<HighestHand>)
 
-class Table(val flop: List<Card>, val turn: Card, val river: Card){
+// TODO: This might seem a lot for one class, but it all related to the 'final' step of the process. So ideally I would make subclasses
+class Table(val flop: List<Card>, val turn: Card, val river: Card) {
     fun <T> merge(first: List<T>, second: List<T>): List<T> {
         return first + second
     }
@@ -112,7 +115,8 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card){
             listOfValuesMoreThanOneTime.sortDescending()
 //            println(listOfValuesMoreThanOneTime)
             highestCardInHighestHand = listOfValuesMoreThanOneTime.first()
-//            println(highestCardInHighestHand)
+            println("heeeeee")
+            println(highestCardInHighestHand)
             relevantElements.removeAll{ it == highestCardInHighestHand }
             secondHighestPair = listOfValuesMoreThanOneTime.elementAt(1)
 //            println(secondHighestPair)
@@ -147,7 +151,7 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card){
         return HighestHand(0, highestCardInHighestHand, kickerNumbers)
     }
 
-    fun combinations(players: List<Player>, table: Table): String{
+    fun combinations(players: List<Player>, table: Table): ResultOfRound {
         var winner = "tie"
         var hand: HighestHand
         var listOfHighest = mutableListOf<HighestHand>()
@@ -295,29 +299,24 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card){
                         }
                         else{
                             println("Kicker number ${kicker+1} is equal")
+                            if (kicker == 4) println("It is a TIE")
                         }
                     }
-                    println("It is a TIE")
                 }
-
                 else{
                     winner = players[otherPairList.indexOf(highestOtherPair)].name
                     println("player ${winner} is the winner with his/her second pair $highestOtherPair")
-
                 }
-
             }
-
             else{
                 winner = players[highestCardinHandList.indexOf(highestOfHighestCardsInHighestHand)].name
                 println("player ${winner} is the winner with his/her $highestOfHighestCardsInHighestHand")
             }
-
         }
         else{
             winner = players[handList.indexOf(highestHand)].name
             println("player ${winner} is the winner because of a higher hand")
         }
-        return winner
+        return ResultOfRound(winner, listOfHighest)
     }
 }

@@ -10,7 +10,7 @@ class HighestHand(val highestHandRank: Int, val highestCardInHighestHand: Int, v
 }
 class Player(val name: String, val pocket: Pocket, val chips: Int)
 
-class ResultOfRound(val winner: String, val hands: List<HighestHand>)
+data class ResultOfRound(val winner: String, val handlist: MutableList<HighestHand>)
 
 //data class TotesForZoneData(
 //val totesAtSpurRows: List<TotesAtSpurRow>,

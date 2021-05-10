@@ -1,25 +1,6 @@
 import org.junit.Test
 import kotlin.test.assertEquals
 
-// edge cases:
-// ace ace ace ten ten ten two should be full house
-// ace ace ace ten ten ten ten should be quads
-// ace, 2,3,4,5,6 should be straight 6 high
-// ace, ace, 2, 2, 3, 3 should be two pair ace,3
-// queen, queen, ace, ace, king, king, king, should be full house with aces, king high
-
-
-//    ######################
-//    TESTCARDS DON'T DELETE
-//    listOfPlayer = mutableListOf(
-//        Player("Bram", Pocket(listOf(Card("f", 13), Card("clubs", 7))), 10),
-//        Player("Charles", Pocket(listOf(Card("f", 13), Card("clubs", 6))), 10)
-//    )
-//    val flop = listOf(Card("clubs", 14), Card("eg", 12), Card("ge", 1));
-//    val turn = Card("rg", 4);
-//    val river = Card("clurbs", 5)
-//    ######################
-
 class TableTest {
     @Test
     fun `equal gives tie`(){
@@ -33,7 +14,7 @@ class TableTest {
         val table = Table(flop, turn, river)
         val result = Table(flop, turn, river).combinations(players = listOfPlayer, table = table)
 
-        assertEquals("tie", result)
+        assertEquals("tie", result.winner)
     }
     @Test
     fun `full house over two trips`(){
@@ -45,9 +26,104 @@ class TableTest {
         val turn = Card("rg", 2)
         val river = Card("clurbs", 5)
         val table = Table(flop, turn, river)
-        val winner = Table(flop, turn, river).combinations(players = listOfPlayer, table = table)
+        val result = Table(flop, turn, river).combinations(players = listOfPlayer, table = table)
 
-
-        assertEquals(winner,"winner")
+        assertEquals("full house", CardFunctions().valueToHand[result.handlist.first().highestHandRank])
     }
+
+    @Test
+    fun `get the highest straight, that beats a low ace`(){
+        val listOfPlayer = mutableListOf(
+            Player("winner", Pocket(listOf(Card("f", 8), Card("clubs", 2))), 10),
+            Player("loser", Pocket(listOf(Card("f", 14), Card("clubs", 0))), 10)
+        )
+        val flop = listOf(Card("clubs", 3), Card("eg", 4), Card("ge", 5))
+        val turn = Card("rg", 6)
+        val river = Card("clurbs", 7)
+        val table = Table(flop, turn, river)
+        val result = Table(flop, turn, river).combinations(players = listOfPlayer, table = table)
+
+        assertEquals("8", CardFunctions().valueToCardNumber[result.handlist.first().highestCardInHighestHand])
+    }
+
+    @Test
+    fun `get the highest flush`(){
+        val listOfPlayer = mutableListOf(
+            Player("winner", Pocket(listOf(Card("clubs", 2), Card("clubs", 8))), 10),
+            Player("loser", Pocket(listOf(Card("clubs", 3), Card("clubs", 4))), 10)
+        )
+        val flop = listOf(Card("clubs", 14), Card("clubs", 13), Card("clubs", 7))
+        val turn = Card("clubs", 9)
+        val river = Card("clubs", 11)
+        val table = Table(flop, turn, river)
+        val result = Table(flop, turn, river).combinations(players = listOfPlayer, table = table)
+
+        assertEquals(listOf(14, 13, 11, 9, 8), result.handlist.first().kickerNumbers)
+    }
+
+    @Test
+    fun `get the equal flush`(){
+        val listOfPlayer = mutableListOf(
+            Player("winner", Pocket(listOf(Card("clubs", 2), Card("clubs", 4))), 10),
+            Player("loser", Pocket(listOf(Card("clubs", 3), Card("clubs", 3))), 10)
+        )
+        val flop = listOf(Card("clubs", 14), Card("clubs", 13), Card("clubs", 7))
+        val turn = Card("clubs", 9)
+        val river = Card("clubs", 11)
+        val table = Table(flop, turn, river)
+        val result = Table(flop, turn, river).combinations(players = listOfPlayer, table = table)
+
+        assertEquals("tie", result.winner)
+    }
+
+    @Test
+    fun `quads over full house`(){
+        val listOfPlayer = mutableListOf(
+            Player("winner", Pocket(listOf(Card("f", 2), Card("clubs", 2))), 10),
+            Player("loser", Pocket(listOf(Card("f", 13), Card("clubs", 13))), 10)
+        )
+        val flop = listOf(Card("clubs", 14), Card("eg", 14), Card("ge", 14))
+        val turn = Card("rg", 2)
+        val river = Card("clurbs", 2)
+        val table = Table(flop, turn, river)
+        val result = Table(flop, turn, river).combinations(players = listOfPlayer, table = table)
+
+
+        assertEquals("quads", CardFunctions().valueToHand[result.handlist.first().highestHandRank])
+    }
+
+    @Test
+    fun `ace, ace, 2, 2, 3, 3 should be two pair ace high, 3 second`(){
+        val listOfPlayer = mutableListOf(
+            Player("winner", Pocket(listOf(Card("f", 14), Card("clubs", 14))), 10),
+            Player("loser", Pocket(listOf(Card("f", 13), Card("clubs", 13))), 10)
+        )
+        val flop = listOf(Card("clubs", 2), Card("eg", 2), Card("ge", 3))
+        val turn = Card("rg", 3)
+        val river = Card("clurbs", 4)
+        val table = Table(flop, turn, river)
+        val result = Table(flop, turn, river).combinations(players = listOfPlayer, table = table)
+
+
+        assertEquals("Ace", CardFunctions().valueToCardNumber[result.handlist.first().highestCardInHighestHand])
+    }
+
+    @Test
+    fun `queen, queen, ace, ace, king, king, king, should be full house with aces, king high`(){
+        val listOfPlayer = mutableListOf(
+            Player("winner", Pocket(listOf(Card("f", 12), Card("clubs", 12))), 10),
+            Player("loser", Pocket(listOf(Card("f", 13), Card("clubs", 13))), 10)
+        )
+        val flop = listOf(Card("clubs", 14), Card("eg", 14), Card("ge", 13))
+        val turn = Card("rg", 13)
+        val river = Card("clurbs", 13)
+        val table = Table(flop, turn, river)
+        val result = Table(flop, turn, river).combinations(players = listOfPlayer, table = table)
+
+
+        assertEquals("King", CardFunctions().valueToCardNumber[result.handlist.first().highestCardInHighestHand])
+        assertEquals("Ace", CardFunctions().valueToCardNumber[result.handlist.first().otherPair])
+
+    }
+
 }
