@@ -115,8 +115,8 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card) {
             listOfValuesMoreThanOneTime.sortDescending()
 //            println(listOfValuesMoreThanOneTime)
             highestCardInHighestHand = listOfValuesMoreThanOneTime.first()
-            println("heeeeee")
-            println(highestCardInHighestHand)
+//            println("heeeeee")
+//            println(highestCardInHighestHand)
             relevantElements.removeAll{ it == highestCardInHighestHand }
             secondHighestPair = listOfValuesMoreThanOneTime.elementAt(1)
 //            println(secondHighestPair)
@@ -280,6 +280,8 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card) {
                     println("if relevant, equal other pair")
 
 //      Check if equal kickers
+//                    can be replaced with
+//                    kickerLists.forEachIndexed{ index, kicker -> }
                     for (kicker in 0 until kickerLists[0].size){
 //                        println("kicker $kicker")
                         var playerScoreList = mutableListOf<Int>()
@@ -299,7 +301,7 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card) {
                         }
                         else{
                             println("Kicker number ${kicker+1} is equal")
-                            if (kicker == 4) println("It is a TIE")
+                            if (kicker == 3) println("It is a TIE")
                         }
                     }
                 }
@@ -317,6 +319,9 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card) {
             winner = players[handList.indexOf(highestHand)].name
             println("player ${winner} is the winner because of a higher hand")
         }
+        println()
+        println()
+        println()
         return ResultOfRound(winner, listOfHighest)
     }
 }

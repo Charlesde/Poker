@@ -126,4 +126,37 @@ class TableTest {
 
     }
 
+    @Test
+    fun `kickers van high cards`(){
+        val listOfPlayer = mutableListOf(
+            Player("winner", Pocket(listOf(Card("f", 13), Card("clubs", 5))), 10),
+            Player("loser", Pocket(listOf(Card("f", 13), Card("clubs", 4))), 10)
+        )
+        val flop = listOf(Card("clubs", 11), Card("eg", 10), Card("ge", 9))
+        val turn = Card("rg", 2)
+        val river = Card("clurbs", 3)
+        val table = Table(flop, turn, river)
+        val result = Table(flop, turn, river).combinations(players = listOfPlayer, table = table)
+
+
+        assertEquals(listOf(11, 10, 9, 5), result.handlist.first().kickerNumbers)
+
+    }
+    @Test
+    fun `kickers van high cards bij gelijk spel`(){
+        val listOfPlayer = mutableListOf(
+            Player("winner", Pocket(listOf(Card("f", 13), Card("clubs", 3))), 10),
+            Player("loser", Pocket(listOf(Card("f", 13), Card("clubs", 2))), 10)
+        )
+        val flop = listOf(Card("clubs", 11), Card("eg", 10), Card("ge", 9))
+        val turn = Card("rg", 4)
+        val river = Card("clurbs", 5)
+        val table = Table(flop, turn, river)
+        val result = Table(flop, turn, river).combinations(players = listOfPlayer, table = table)
+
+
+        assertEquals(listOf(11, 10, 9, 5), result.handlist.first().kickerNumbers)
+
+    }
+
 }

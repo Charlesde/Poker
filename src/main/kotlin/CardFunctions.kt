@@ -9,6 +9,7 @@ class CardFunctions (
     6 to "full house",
     7 to "quads",
     8 to "straight flush"),
+
     val valueToCardNumber: Map<Int, String> = mapOf(
     1 to "an Ace that counts as a 1",
         2 to "2",
@@ -36,17 +37,6 @@ class CardFunctions (
         }
         return relevantElements
     }
-
-//    val valueToHand = mapOf(
-//        0 to "high card",
-//        1 to "pair",
-//        2 to "two pair",
-//        3 to "trips",
-//        4 to "straight",
-//        5 to "flush",
-//        6 to "full house",
-//        7 to "quads",
-//        8 to "straight flush")
 
     fun getColor(cardList: List<Card>): List<String>{
         val relevantElements = mutableListOf<String>()

@@ -6,7 +6,7 @@ class PlayerTest {
     @Test
     fun `players get each 2 cards if correct list`(){
         val testlist = P(listOf("bla1","bla2","bla3","bla4")).players
-        val result = Dealcards(testlist, Deck().cards, 1)
+        val result = Dealcards().dealcards(testlist, Deck().cards, 1)
         var cards = 0
         for (player in result) {
             val pocket = player.pocket.cards
