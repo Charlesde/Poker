@@ -249,6 +249,8 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card) {
 
 //        Method 1, using for loops
 //        TODO: dit zou met een map cleaner kunnen.
+//        TODO: This fails whenever there are more than 2 players and two of them have equal hands --> the third one can still win due to non-removal and uses of indexes.
+//         Solution: loop only over winners or change to map --> nee werkt ook niet lekker, want dan moet je met die list weer rekening houden in de laag eronder....
         val handList = mutableListOf<Int>()
         val highestCardinHandList = mutableListOf<Int>()
         val otherPairList = mutableListOf<Int>()

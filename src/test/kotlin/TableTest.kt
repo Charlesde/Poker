@@ -159,4 +159,21 @@ class TableTest {
 
     }
 
+    @Test
+    fun `three is problematic`(){
+        // TODO This fails whenever there are more than 2 players and two of them have equal hands --> the third one can still win due to non-removal and uses of indexes.
+        val listOfPlayer = mutableListOf(
+            Player("winner", Pocket(listOf(Card("a", 4), Card("a", 4))), 10),
+            Player("loser1", Pocket(listOf(Card("a", 1), Card("a", 13))), 10),
+            Player("loser2", Pocket(listOf(Card("a", 9), Card("a", 9))), 10)
+        )
+        val flop = listOf(Card("b", 4), Card("c", 9), Card("b", 12))
+        val turn = Card("b", 11)
+        val river = Card("b", 5)
+        val table = Table(flop, turn, river)
+        val result = Table(flop, turn, river).combinations(players = listOfPlayer, table = table)
+
+        assertEquals("winner", result.winner)
+    }
+
 }

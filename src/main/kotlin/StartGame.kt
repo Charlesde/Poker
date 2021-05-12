@@ -1,5 +1,12 @@
+// TODO Somehow I can't import these from the 'repository' file without it complaining...
+//import repository.Card as Card
+//import repository.Pocket as Pocket
+//import repository.Player as Player
+//import repository.HighestHand as HighestHand
+
 class StartGame() {
     fun playTheGame(playerSelection: PlayerSelection): String {
+// Better would be to keep the list of players, and then keep using that one
         val playersNames = playerSelection.players
         var chips = playerSelection.chips.first() // should remove first when we have a chip system
         val deck = Deck()

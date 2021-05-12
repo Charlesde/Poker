@@ -15,7 +15,12 @@ class PlayerSelection (var players: List<String> = listOf("Bram", "Charles"), va
     init {
         if (players.size != players.distinct().size) {
             println("Player name already picked")
+// TODO get this assertionerror working with a test
 //            AssertionError("Player name already chosen")
+            players = listOf()
+        }
+        else if (players.size > 12) {
+            println("Recommended max nr of players is 9, 12 is too much")
             players = listOf()
         }
     }
