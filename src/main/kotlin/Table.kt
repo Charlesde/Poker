@@ -243,12 +243,8 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card) {
         println()
 //        println("The list of highest hands is $listOfHighest")
 
-//        Method 1, using for loops
-//        TODO: dit zou met een map cleaner kunnen.
-//        TODO: This fails whenever there are more than 2 players and two of them have equal hands --> the third one can still win due to non-removal and uses of indexes.
-//         Solution: loop only over winners or change to map --> nee werkt ook niet lekker, want dan moet je met die list weer rekening houden in de laag eronder....
-        listOfHighest.maxByOrNull {it.highestHandRank}.highestHandRank
-
+//        TODO: make this related to the list of Players instead of a new 'listofHihest'
+//       New Code
         // 1    10
         // 2    8
         // 3    10
@@ -258,10 +254,31 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card) {
         val highestHandRankMap = listOfHighest.groupBy { it.highestHandRank }
         val sortedHighestHandRanks = highestHandRankMap.entries.sortedByDescending { it.key }
         // key 10  value [10, 10]
-        // key 8   value [8]
+        // key 8   value [8
+        val allWinningHands = sortedHighestHandRanks.first().value
+        val highestCardInHandMap = allWinningHands.groupBy { it.highestCardInHighestHand }
+        val sortedHighestCardInHands = highestCardInHandMap.entries.sortedByDescending { it.key }
+        val allWinningHighestnumbers = sortedHighestCardInHands.first().value
+        val highestSecondPairMap = allWinningHighestnumbers.groupBy { it.highestCardInHighestHand }
+        val sortedSeconsPair = highestSecondPairMap.entries.sortedByDescending { it.key }
+        val allWinningSecondPairs = sortedSeconsPair.first().value
+        println("all winning $allWinningSecondPairs")
+        var kickers = allWinningSecondPairs
+//        var HighestKickersMap = mapOf<Int, List<HighestHand>>()
+        for (kicker in allWinningSecondPairs[0].kickerNumbers.indices){
+            val HighestKickersMap = allWinningSecondPairs.groupBy { it.kickerNumbers[kicker] }
+            val sortedKickers = HighestKickersMap.entries.sortedByDescending { it.key }
+            kickers = sortedSeconsPair.first().value
+        }
+        if (kickers.size > 1){
+            println("----- Tie between $kickers")
+        }
+        else {
+            println("----- NEW CODE The winner is ${kickers.first().highestHandRank}")
+        }
 
-        val allWinningHands = sortedHighestHandRanks.first().value[0]
 
+//        OLD CODE
         val handList = mutableListOf<Int>()
         val highestCardinHandList = mutableListOf<Int>()
         val otherPairList = mutableListOf<Int>()
