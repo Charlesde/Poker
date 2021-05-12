@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="StartGameTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2021-05-12T10:38:04" hostname="LMAC-Z81DFLVDM" time="0.045">
+  <properties/>
+  <testcase name="Max players " classname="StartGameTest" time="0.045"/>
+  <system-out><![CDATA[0 got 7 of diamonds and 2 of diamonds
+1 got 12 of clubs and 10 of hearts
+2 got 8 of hearts and 4 of diamonds
+3 got 12 of diamonds and 10 of spades
+4 got 2 of hearts and 9 of clubs
+5 got 13 of clubs and 9 of spades
+6 got 2 of clubs and 4 of hearts
+7 got 14 of clubs and 12 of hearts
+8 got 11 of diamonds and 14 of diamonds
+9 got 13 of diamonds and 9 of diamonds
+10 got 6 of hearts and 5 of clubs
+11 got 3 of hearts and 12 of spades
+12 got 11 of hearts and 5 of hearts
+13 got 6 of spades and 13 of spades
+14 got 9 of hearts and 4 of spades
+15 got 5 of diamonds and 7 of spades
+16 got 11 of spades and 3 of diamonds
+17 got 6 of diamonds and 10 of clubs
+18 got 8 of spades and 3 of spades
+19 got 3 of clubs and 6 of clubs
+On the table lies 11 of clubs, 2 of spades, 13 of hearts, 8 of clubs, and 8 of diamonds
+
+0 has TWO PAIR with value 8, secondly 2 and the kicker [13]
+
+1 has a PAIR with value 8 and the kickers [13, 12, 11]!
+
+2 has TRIPS with value 8 and the kickers [13, 11]
+
+3 has a PAIR with value 8 and the kickers [13, 12, 11]!
+
+4 has TWO PAIR with value 8, secondly 2 and the kicker [13]
+
+5 has TWO PAIR with value 13, secondly 8 and the kicker [11]
+
+6 has TWO PAIR with value 8, secondly 2 and the kicker [13]
+
+7 has a PAIR with value 8 and the kickers [14, 13, 12]!
+
+8 has TWO PAIR with value 11, secondly 8 and the kicker [14]
+
+9 has TWO PAIR with value 13, secondly 8 and the kicker [11]
+
+10 has a PAIR with value 8 and the kickers [13, 11, 6]!
+
+11 has a PAIR with value 8 and the kickers [13, 12, 11]!
+
+12 has TWO PAIR with value 11, secondly 8 and the kicker [13]
+
+13 has TWO PAIR with value 13, secondly 8 and the kicker [11]
+
+14 has a PAIR with value 8 and the kickers [13, 11, 9]!
+
+15 has a PAIR with value 8 and the kickers [13, 11, 7]!
+
+16 has TWO PAIR with value 11, secondly 8 and the kicker [13]
+
+17 has a PAIR with value 8 and the kickers [13, 11, 10]!
+
+18 has TRIPS with value 8 and the kickers [13, 11]
+
+19 has a PAIR with value 8 and the kickers [13, 11, 6]!
+
+equal hand
+equal number
+if relevant, equal other pair
+Kicker number 1 is equal
+
+
+
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
