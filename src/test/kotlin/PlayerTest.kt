@@ -1,6 +1,8 @@
 import org.junit.Test
+import org.junit.jupiter.api.assertThrows
+import java.lang.RuntimeException
 import kotlin.test.assertEquals
-import PlayerSelection as P
+import PlayerSelection
 
 class PlayerTest {
     @Test
@@ -20,7 +22,6 @@ class PlayerTest {
     @Test
     fun `players get each 0 cards if similar names -- should be error instead`(){
         println("huh")
-        val testlist = P(listOf("bla1","bla1","bla3","bla4")).players
-        assertEquals(testlist.size, 0)
+        assertThrows(RuntimeException::class.java){PlayerSelection(listOf("bla1","bla1","bla3","bla4"))}
     }
 }

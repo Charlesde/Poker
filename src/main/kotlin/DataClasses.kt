@@ -1,6 +1,3 @@
-package repository
-
-
 data class Player(val name: String, val pocket: Pocket, var chips: Int){
     fun printResults() {
         println(
@@ -20,9 +17,4 @@ data class Pocket(val cards: List<Card>)
 
 data class HighestHand(val highestHandRank: Int, val highestCardInHighestHand: Int, val kickerNumbers: List<Int>, val otherPair: Int = 0)
 
-
-
-//data class TotesForZoneData(
-//val totesAtSpurRows: List<TotesAtSpurRow>,
-//val totesToZoneData: List<TotesToZoneRow>
-//)
+data class ResultOfRound(val winner: String, val handlist: MutableList<HighestHand>)

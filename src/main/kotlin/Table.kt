@@ -1,7 +1,3 @@
-// TODO: same issues as in main... importing from repo gives error
-//import repository.ResultOfRound as ResultOfRound
-data class ResultOfRound(val winner: String, val handlist: MutableList<HighestHand>)
-
 // TODO: This might seem a lot for one class, but it all related to the 'final' step of the process. So ideally I would make subclasses
 class Table(val flop: List<Card>, val turn: Card, val river: Card) {
     fun <T> merge(first: List<T>, second: List<T>): List<T> {
@@ -251,6 +247,21 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card) {
 //        TODO: dit zou met een map cleaner kunnen.
 //        TODO: This fails whenever there are more than 2 players and two of them have equal hands --> the third one can still win due to non-removal and uses of indexes.
 //         Solution: loop only over winners or change to map --> nee werkt ook niet lekker, want dan moet je met die list weer rekening houden in de laag eronder....
+        listOfHighest.maxByOrNull {it.highestHandRank}.highestHandRank
+
+        // 1    10
+        // 2    8
+        // 3    10
+
+        // key 8   value [8]
+        // key 10  value [10, 10]
+        val highestHandRankMap = listOfHighest.groupBy { it.highestHandRank }
+        val sortedHighestHandRanks = highestHandRankMap.entries.sortedByDescending { it.key }
+        // key 10  value [10, 10]
+        // key 8   value [8]
+
+        val allWinningHands = sortedHighestHandRanks.first().value[0]
+
         val handList = mutableListOf<Int>()
         val highestCardinHandList = mutableListOf<Int>()
         val otherPairList = mutableListOf<Int>()

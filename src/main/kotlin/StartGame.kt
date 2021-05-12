@@ -1,9 +1,3 @@
-// TODO Somehow I can't import these from the 'repository' file without it complaining...
-//import repository.Card as Card
-//import repository.Pocket as Pocket
-//import repository.Player as Player
-//import repository.HighestHand as HighestHand
-
 class StartGame() {
     fun playTheGame(playerSelection: PlayerSelection): String {
 // Better would be to keep the list of players, and then keep using that one
@@ -28,24 +22,5 @@ class StartGame() {
             activeplayers -= 1
         }
         return "game done"
-    }
-}
-data class Card(val color: String, val number: Int)
-
-data class Pocket(val cards: List<Card>)
-
-data class HighestHand(val highestHandRank: Int, val highestCardInHighestHand: Int, val kickerNumbers: List<Int>, val otherPair: Int = 0)
-
-// TODO Somehow I can't import these from 'repository' without it complaining...
-data class Player(val name: String, val pocket: Pocket, var chips: Int){
-    fun printResults() {
-        println(
-            "${name} got ${pocket.cards.elementAt(0).number} of ${
-                pocket.cards.elementAt(0).color
-            } and" +
-                    " ${pocket.cards.elementAt(1).number} of ${
-                        pocket.cards.elementAt(1).color
-                    }"
-        )
     }
 }
