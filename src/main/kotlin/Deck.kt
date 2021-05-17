@@ -6,6 +6,8 @@ class Deck (var cards: List<Card> = emptyList()){
 //            Ace = 14, only change to 1 to check for straights, and then count as such
             for (number in 2..14)
                 cards += Card(color, number)
+
+        cards.shuffled()
     }
 
     fun shuffle(): List<Card>{
