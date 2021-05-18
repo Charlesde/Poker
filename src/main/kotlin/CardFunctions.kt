@@ -1,3 +1,5 @@
+import domain.Card
+
 class CardFunctions (
     val valueToHand: Map<Int, String> = mapOf(
     0 to "high card",

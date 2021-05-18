@@ -9,7 +9,7 @@ class StartGameTest {
     fun `Playround gives back as many hands as there are players`() {
         val players = listOf("1", "2", "3", "4", "5", "6", "7")
         val result = PlayRound().playround(Deck(), players, 5)
-        assertEquals(players.size, result.handlist.size)
+        assertEquals(players.size, result.size)
     }
 
     @Test
@@ -19,7 +19,7 @@ class StartGameTest {
             players.add(i.toString())
         }
         val result = PlayRound().playround(Deck(), players, 5)
-        assertEquals(players.size, result.handlist.size)
+        assertEquals(players.size, result.size)
     }
 
 }

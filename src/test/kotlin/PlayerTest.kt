@@ -10,7 +10,7 @@ class PlayerTest {
         val result = Dealcards().dealcards(testlist, Deck().cards, 1)
         var cards = 0
         for (player in result) {
-            val pocket = player.pocket.cards
+            val pocket = player.pocket
             for (card in pocket) {
                 cards += 1
             }

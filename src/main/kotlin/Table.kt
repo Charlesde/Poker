@@ -1,3 +1,9 @@
+import domain.Chip
+import domain.Card
+import domain.Player
+import domain.HighestHand
+import java.lang.IllegalStateException
+
 // TODO: This might seem a lot for one class, but it all related to the 'final' step of the process. So ideally I would make subclasses
 class Table(val flop: List<Card>, val turn: Card, val river: Card) {
     fun <T> merge(first: List<T>, second: List<T>): List<T> {
@@ -147,19 +153,22 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card) {
         return HighestHand(0, highestCardInHighestHand, kickerNumbers)
     }
 
-    fun combinations(players: List<Player>, table: Table): ResultOfRound {
-        var winner = "tie"
-        var hand: HighestHand
-        var listOfHighest = mutableListOf<HighestHand>()
+    fun combinations(players: List<Player>, table: Table): List<Player> {
+        var winnerList = mutableListOf<Player>()
 
-        println("On the table lies ${flop.elementAt(0).number} of ${flop.elementAt(0).color}, ${flop.elementAt(1).number} of ${flop.elementAt(1).color}, ${flop.elementAt(2).number} of ${flop.elementAt(2).color}, ${turn.number} of ${turn.color}, and ${river.number} of ${river.color}")
-
+        println("On the table lies ${flop.elementAt(0).number} of ${flop.elementAt(0).color}, " +
+                "${flop.elementAt(1).number} of ${flop.elementAt(1).color}, " +
+                "${flop.elementAt(2).number} of ${flop.elementAt(2).color}, " +
+                "${turn.number} of ${turn.color}, and " +
+                "${river.number} of ${river.color}")
         for (player in players){
             println()
             print("${player.name} has ")
+            println("${player.pocket[0].number} of ${player.pocket[0].color} and " +
+                    "${player.pocket[1].number} of ${player.pocket[1].color}")
             var cardList = listOf<Card>(
-                player.pocket.cards.elementAt(0),
-                player.pocket.cards.elementAt(1),
+                player.pocket.elementAt(0),
+                player.pocket.elementAt(1),
                 flop.elementAt(0),
                 flop.elementAt(1),
                 flop.elementAt(2),
@@ -173,185 +182,183 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card) {
 //            }
 
             if (isStraightFlush(cardList).kickerNumbers != listOf<Int>()) {
-                hand = isStraightFlush(cardList)
-                if (hand.highestCardInHighestHand == 14) {
+                player.hand = isStraightFlush(cardList)
+                if (player.hand.highestCardInHighestHand == 14) {
                     print("HOLY SHIT, a ROYAL FLUSH!")
                 }
                 else{
                     print("a STRAIGHT FLUSH")
-                    print(" with value ${hand.highestCardInHighestHand} ")
+                    print(" with value ${player.hand.highestCardInHighestHand} ")
                 }
             }
 
             else if (isQuads(cardList).kickerNumbers != listOf<Int>()) {
                 print("QUADS")
-                hand = isQuads(cardList)
-                print(" with value ${hand.highestCardInHighestHand} ")
-                println("and the kickers ${hand.kickerNumbers}")
+                player.hand = isQuads(cardList)
+                print(" with value ${player.hand.highestCardInHighestHand} ")
+                println("and the kickers ${player.hand.kickerNumbers}")
             }
 
             else if (isFullHouse(cardList).otherPair != 0) {
                 print("FULL HOUSE")
-                hand = isFullHouse(cardList)
-                print(" with trips value ${hand.highestCardInHighestHand} ")
-                println("and the pair ${hand.otherPair}")
+                player.hand = isFullHouse(cardList)
+                print(" with trips value ${player.hand.highestCardInHighestHand} ")
+                println("and the pair ${player.hand.otherPair}")
             }
 
             else if (isFlush(cardList).kickerNumbers != listOf<Int>()){
                 print("a FLUSH")
-                hand = isFlush(cardList)
-                print(" with value ${hand.highestCardInHighestHand} ")
-                println("and the kickers ${hand.kickerNumbers}")
+                player.hand = isFlush(cardList)
+                print(" with value ${player.hand.highestCardInHighestHand} ")
+                println("and the kickers ${player.hand.kickerNumbers}")
             }
 
             else if (isStraight(cardList).kickerNumbers != listOf<Int>()){
                 print("a STRAIGHT")
-                hand = isStraight(cardList)
-                print(" with value ${hand.highestCardInHighestHand} ")
-                println("and the kickers ${hand.kickerNumbers}")
+                player.hand = isStraight(cardList)
+                print(" with value ${player.hand.highestCardInHighestHand} ")
+                println("and the kickers ${player.hand.kickerNumbers}")
             }
 
             else if (isTrips(cardList).kickerNumbers != listOf<Int>()){
                 print("TRIPS")
-                hand = isTrips(cardList)
-                print(" with value ${hand.highestCardInHighestHand} ")
-                println("and the kickers ${hand.kickerNumbers}")
+                player.hand = isTrips(cardList)
+                print(" with value ${player.hand.highestCardInHighestHand} ")
+                println("and the kickers ${player.hand.kickerNumbers}")
             }
 
             else if (isTwoPair(cardList).kickerNumbers != listOf<Int>()){
                 print("TWO PAIR")
-                hand = isTwoPair(cardList)
-                print(" with value ${hand.highestCardInHighestHand}, ")
-                print("secondly ${hand.otherPair} ")
-                println("and the kicker ${hand.kickerNumbers}")
+                player.hand = isTwoPair(cardList)
+                print(" with value ${player.hand.highestCardInHighestHand}, ")
+                print("secondly ${player.hand.otherPair} ")
+                println("and the kicker ${player.hand.kickerNumbers}")
             }
 
             else if (isPair(cardList).kickerNumbers != listOf<Int>()) {
                 print("a PAIR ")
-                hand = isPair(cardList)
-                print("with value ${hand.highestCardInHighestHand} ")
-                println("and the kickers ${hand.kickerNumbers}!")
+                player.hand = isPair(cardList)
+                print("with value ${player.hand.highestCardInHighestHand} ")
+                println("and the kickers ${player.hand.kickerNumbers}!")
             }
             else {
                 print("HIGH CARD")
-                hand = isHighCard(cardList)
-                println(" with highest being ${hand.highestCardInHighestHand}")
+                player.hand = isHighCard(cardList)
+                println(" with highest being ${player.hand.highestCardInHighestHand}")
             }
-            listOfHighest.add(hand)
 
         }
-        println()
-//        println("The list of highest hands is $listOfHighest")
-
-//        TODO: make this related to the list of Players instead of a new 'listofHihest'
-//       New Code
-        // 1    10
-        // 2    8
-        // 3    10
-
-        // key 8   value [8]
-        // key 10  value [10, 10]
-        val highestHandRankMap = listOfHighest.groupBy { it.highestHandRank }
-        val sortedHighestHandRanks = highestHandRankMap.entries.sortedByDescending { it.key }
-        // key 10  value [10, 10]
-        // key 8   value [8
-        val allWinningHands = sortedHighestHandRanks.first().value
-        val highestCardInHandMap = allWinningHands.groupBy { it.highestCardInHighestHand }
+        val highestHandRankMapPlayer = players.groupBy { it.hand.highestHandRank }
+        val sortedHighestHandRanksPlayer = highestHandRankMapPlayer.entries.sortedByDescending { it.key }
+        val allWinningHandsPlayer = sortedHighestHandRanksPlayer.first().value
+        val highestCardInHandMap = allWinningHandsPlayer.groupBy { it.hand.highestCardInHighestHand }
         val sortedHighestCardInHands = highestCardInHandMap.entries.sortedByDescending { it.key }
         val allWinningHighestnumbers = sortedHighestCardInHands.first().value
-        val highestSecondPairMap = allWinningHighestnumbers.groupBy { it.highestCardInHighestHand }
-        val sortedSeconsPair = highestSecondPairMap.entries.sortedByDescending { it.key }
-        val allWinningSecondPairs = sortedSeconsPair.first().value
-        println("all winning $allWinningSecondPairs")
+        val highestSecondPairMap = allWinningHighestnumbers.groupBy { it.hand.otherPair }
+        val sortedSecondPair = highestSecondPairMap.entries.sortedByDescending { it.key }
+        val allWinningSecondPairs = sortedSecondPair.first().value
         var kickers = allWinningSecondPairs
-//        var HighestKickersMap = mapOf<Int, List<HighestHand>>()
-        for (kicker in allWinningSecondPairs[0].kickerNumbers.indices){
-            val HighestKickersMap = allWinningSecondPairs.groupBy { it.kickerNumbers[kicker] }
+        for (kicker in allWinningSecondPairs[0].hand.kickerNumbers.indices){
+            val HighestKickersMap = allWinningSecondPairs.groupBy { it.hand.kickerNumbers[kicker] }
             val sortedKickers = HighestKickersMap.entries.sortedByDescending { it.key }
-            kickers = sortedSeconsPair.first().value
+            kickers = sortedKickers.first().value
         }
         if (kickers.size > 1){
-            println("----- Tie between $kickers")
+            print("----- TIE between ")
+            for (playernumber in (0 until kickers.size)){
+                print("${kickers[playernumber].name} ")
+                if (playernumber != kickers.size - 1) print("and ")
+                winnerList.add(kickers[playernumber])
+            }
         }
         else {
-            println("----- NEW CODE The winner is ${kickers.first().highestHandRank}")
+            var winner = kickers.first().name
+            print("----- The winner is ${winner} with " +
+                    "${CardFunctions().valueToHand[kickers.first().hand.highestHandRank]} " +
+                    "(${CardFunctions().valueToCardNumber[kickers.first().hand.highestCardInHighestHand]} high), and ")
+            when (kickers.first().hand.highestHandRank){
+                2 -> print("with ${CardFunctions().valueToCardNumber[kickers.first().hand.otherPair]} as highest second pair, and ")
+                6 -> print("with ${CardFunctions().valueToCardNumber[kickers.first().hand.otherPair]} as highest pair, and ")
+                }
+            println("the kickers ${kickers.first().hand.kickerNumbers}")
+            winnerList = kickers.toMutableList()
         }
 
 
 //        OLD CODE
-        val handList = mutableListOf<Int>()
-        val highestCardinHandList = mutableListOf<Int>()
-        val otherPairList = mutableListOf<Int>()
-        val kickerLists = mutableListOf<MutableList<Int>>()
-        for (index in 0 until listOfHighest.size) {
-//            print("${listOfHighest[index]}")
-            hand = listOfHighest[index]
-            handList.add(hand.highestHandRank)
-            highestCardinHandList.add(hand.highestCardInHighestHand)
-            otherPairList.add(hand.otherPair)
-//            println(hand.kickerNumbers)
-//            var sortedKickerList = hand.kickerNumbers.sortedDescending().toMutableList()
-            kickerLists.add(hand.kickerNumbers.toMutableList())
-        }
-
-//      Check if equal hand
-        var highestHand = handList.maxOrNull()
-        if (handList.filter{it == highestHand!!}.size > 1){
-            println("equal hand")
-
-//      Check if equal highest card of highest hand
-            var highestOfHighestCardsInHighestHand = highestCardinHandList.maxOrNull()
-            if (highestCardinHandList.filter{it == highestOfHighestCardsInHighestHand!!}.size > 1){
-                println("equal number")
-
-//      Check if equal highest other pair
-                var highestOtherPair = otherPairList.maxOrNull()
-                if (otherPairList.filter{it == highestOtherPair!!}.size > 1){
-                    println("if relevant, equal other pair")
-
-//      Check if equal kickers
-//                    can be replaced with
-//                    kickerLists.forEachIndexed{ index, kicker -> }
-                    for (kicker in 0 until kickerLists[0].size){
-//                        println("kicker $kicker")
-                        var playerScoreList = mutableListOf<Int>()
-                        for (player in 0 until kickerLists.size){
-//                            println("player $player")
-//                            println("card ${kickerLists[player][kicker]}")
-                            playerScoreList.add(kickerLists[player][kicker])
-                        }
-                        var bestKicker = playerScoreList.maxOrNull()
-//                        println("bestkicker $bestKicker")
-//                        println("playerScoreList $playerScoreList")
-//                        println("bestkicker ${playerScoreList.filter{it == bestKicker!!}.size}")
-                        if (playerScoreList.filter{it != bestKicker!!}.size == 1){
-                            winner = players[playerScoreList.indexOf(bestKicker)].name
-                            println("Player ${winner} is the winner with a $bestKicker")
-                            break
-                        }
-                        else{
-                            println("Kicker number ${kicker+1} is equal")
-                            if (kicker == 3) println("It is a TIE")
-                        }
-                    }
-                }
-                else{
-                    winner = players[otherPairList.indexOf(highestOtherPair)].name
-                    println("player ${winner} is the winner with his/her second pair $highestOtherPair")
-                }
-            }
-            else{
-                winner = players[highestCardinHandList.indexOf(highestOfHighestCardsInHighestHand)].name
-                println("player ${winner} is the winner with his/her $highestOfHighestCardsInHighestHand")
-            }
-        }
-        else{
-            winner = players[handList.indexOf(highestHand)].name
-            println("player ${winner} is the winner because of a higher hand")
-        }
+//        val handList = mutableListOf<Int>()
+//        val highestCardinHandList = mutableListOf<Int>()
+//        val otherPairList = mutableListOf<Int>()
+//        val kickerLists = mutableListOf<MutableList<Int>>()
+//        for (index in 0 until listOfHighest.size) {
+////            print("${listOfHighest[index]}")
+//            hand = listOfHighest[index]
+//            handList.add(hand.highestHandRank)
+//            highestCardinHandList.add(hand.highestCardInHighestHand)
+//            otherPairList.add(hand.otherPair)
+////            println(hand.kickerNumbers)
+////            var sortedKickerList = hand.kickerNumbers.sortedDescending().toMutableList()
+//            kickerLists.add(hand.kickerNumbers.toMutableList())
+//        }
+//
+////      Check if equal hand
+//        var highestHand = handList.maxOrNull()
+//        if (handList.filter{it == highestHand!!}.size > 1){
+//            println("equal hand")
+//
+////      Check if equal highest card of highest hand
+//            var highestOfHighestCardsInHighestHand = highestCardinHandList.maxOrNull()
+//            if (highestCardinHandList.filter{it == highestOfHighestCardsInHighestHand!!}.size > 1){
+//                println("equal number")
+//
+////      Check if equal highest other pair
+//                var highestOtherPair = otherPairList.maxOrNull()
+//                if (otherPairList.filter{it == highestOtherPair!!}.size > 1){
+//                    println("if relevant, equal other pair")
+//
+////      Check if equal kickers
+////                    can be replaced with
+////                    kickerLists.forEachIndexed{ index, kicker -> }
+//                    for (kicker in 0 until kickerLists[0].size){
+////                        println("kicker $kicker")
+//                        var playerScoreList = mutableListOf<Int>()
+//                        for (player in 0 until kickerLists.size){
+////                            println("player $player")
+////                            println("card ${kickerLists[player][kicker]}")
+//                            playerScoreList.add(kickerLists[player][kicker])
+//                        }
+//                        var bestKicker = playerScoreList.maxOrNull()
+////                        println("bestkicker $bestKicker")
+////                        println("playerScoreList $playerScoreList")
+////                        println("bestkicker ${playerScoreList.filter{it == bestKicker!!}.size}")
+//                        if (playerScoreList.filter{it != bestKicker!!}.size == 1){
+//                            winner = players[playerScoreList.indexOf(bestKicker)].name
+//                            println("Player ${winner} is the winner with a $bestKicker")
+//                            break
+//                        }
+//                        else{
+//                            println("Kicker number ${kicker+1} is equal")
+//                            if (kicker == 3) println("It is a TIE")
+//                        }
+//                    }
+//                }
+//                else{
+//                    winner = players[otherPairList.indexOf(highestOtherPair)].name
+//                    println("player ${winner} is the winner with his/her second pair $highestOtherPair")
+//                }
+//            }
+//            else{
+//                winner = players[highestCardinHandList.indexOf(highestOfHighestCardsInHighestHand)].name
+//                println("player ${winner} is the winner with his/her $highestOfHighestCardsInHighestHand")
+//            }
+//        }
+//        else{
+//            winner = players[handList.indexOf(highestHand)].name
+//            println("player ${winner} is the winner because of a higher hand")
+//        }
         println()
         println()
         println()
-        return ResultOfRound(winner, listOfHighest)
+        return winnerList
     }
 }

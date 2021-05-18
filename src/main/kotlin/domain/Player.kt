@@ -1,6 +1,7 @@
 package domain
 
-import Card
+import domain.Card
+import domain.HighestHand
 import java.lang.IllegalStateException
 
 data class Player(
@@ -12,6 +13,9 @@ data class Player(
     var pocket = mutableListOf<Card>()
     var chips: List<Chip> = createChips()
     var isWinner: Boolean = false
+
+    //    It bullies me about not initialising so I put in bullshit numbers
+    var hand: HighestHand = HighestHand(1,1, listOf(1,1),1)
 
     fun List<Chip>.getTotalValue() = this.sumBy { it.value }
 

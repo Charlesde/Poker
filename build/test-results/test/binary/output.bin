@@ -1,16 +1,130 @@
-?On the table lies 4 of b, 9 of c, 12 of b, 11 of b, and 5 of b
+TOn the table lies 14 of clubs, 13 of clubs, 7 of clubs, 9 of clubs, and 11 of clubs
 
-7winner has TRIPS with value 4 and the kickers [12, 11]
+%winner has 2 of clubs and 8 of clubs
+9a FLUSH with value 14 and the kickers [14, 13, 11, 9, 8]
 
-+loser1 has HIGH CARD with highest being 13
-
-7loser2 has TRIPS with value 9 and the kickers [12, 11]
-
-´original [HighestHand(highestHandRank=3, highestCardInHighestHand=4, kickerNumbers=[12, 11], otherPair=0), HighestHand(highestHandRank=0, highestCardInHighestHand=13, kickerNumbers=[12, 11, 9, 5], otherPair=0), HighestHand(highestHandRank=3, highestCardInHighestHand=9, kickerNumbers=[12, 11], otherPair=0)]
-nall winning [HighestHand(highestHandRank=3, highestCardInHighestHand=9, kickerNumbers=[12, 11], otherPair=0)]
------ The winner is 3
-equal hand
-,player loser1 is the winner with his/her 13
+$loser has 3 of clubs and 4 of clubs
+9a FLUSH with value 14 and the kickers [14, 13, 11, 9, 7]
+U----- The winner is winner with flush (Ace high), and the kickers [14, 13, 11, 9, 8]
 
 
 
+BOn the table lies 14 of b, 13 of b, 12 of b, 11 of b, and 10 of b
+
+winner has 2 of a and 2 of a
+HOLY SHIT, a ROYAL FLUSH!
+loser has 13 of a and 6 of a
+=HOLY SHIT, a ROYAL FLUSH!----- TIE between winner and loser 
+
+
+KOn the table lies 11 of clubs, 10 of eg, 9 of ge, 4 of rg, and 5 of clurbs
+
+"winner has 13 of f and 3 of clubs
+ HIGH CARD with highest being 13
+
+!loser has 13 of f and 2 of clubs
+ HIGH CARD with highest being 13
+$----- TIE between winner and loser 
+
+
+TOn the table lies 14 of clubs, 13 of clubs, 7 of clubs, 9 of clubs, and 11 of clubs
+
+#tie1 has 2 of clubs and 4 of clubs
+9a FLUSH with value 14 and the kickers [14, 13, 11, 9, 7]
+
+#tie2 has 3 of clubs and 3 of clubs
+9a FLUSH with value 14 and the kickers [14, 13, 11, 9, 7]
+!----- TIE between tie1 and tie2 
+
+
+?On the table lies 4 of b, 9 of c, 12 of b, 11 of b, and 5 of b
+
+winner has 9 of a and 9 of a
+,TRIPS with value 9 and the kickers [12, 11]
+
+loser1 has 4 of a and 4 of a
+,TRIPS with value 4 and the kickers [12, 11]
+
+loser2 has 1 of a and 13 of a
+ HIGH CARD with highest being 13
+I----- The winner is winner with trips (9 high), and the kickers [12, 11]
+
+
+
+IOn the table lies 2 of clubs, 2 of eg, 3 of ge, 3 of rg, and 4 of clurbs
+
+#winner has 14 of f and 14 of clubs
+6TWO PAIR with value 14, secondly 3 and the kicker [4]
+
+"loser has 13 of f and 13 of clubs
+6TWO PAIR with value 13, secondly 3 and the kicker [4]
+l----- The winner is winner with two pair (Ace high), and with 3 as highest second pair, and the kickers [4]
+
+
+
+KOn the table lies 11 of clubs, 10 of eg, 9 of ge, 2 of rg, and 3 of clurbs
+
+"winner has 13 of f and 5 of clubs
+ HIGH CARD with highest being 13
+
+!loser has 13 of f and 4 of clubs
+ HIGH CARD with highest being 13
+V----- The winner is winner with high card (King high), and the kickers [11, 10, 9, 5]
+
+
+
+	IOn the table lies 3 of clubs, 4 of eg, 5 of ge, 6 of rg, and 7 of clurbs
+	
+	!winner has 8 of f and 2 of clubs
+	8a STRAIGHT with value 8 and the kickers [8, 7, 6, 5, 4]
+	
+	!loser has 14 of f and 0 of clubs
+	8a STRAIGHT with value 7 and the kickers [7, 6, 5, 4, 3]
+	S----- The winner is winner with straight (8 high), and the kickers [8, 7, 6, 5, 4]
+	
+	
+	
+
+NOn the table lies 14 of clubs, 14 of eg, 13 of ge, 13 of rg, and 13 of clurbs
+
+
+
+#winner has 12 of f and 12 of clubs
+
+/FULL HOUSE with trips value 13 and the pair 14
+
+
+
+"loser has 12 of f and 12 of clubs
+
+/FULL HOUSE with trips value 13 and the pair 14
+
+$----- TIE between winner and loser 
+
+
+
+
+
+e   ---- HighestHand(highestHandRank=6, highestCardInHighestHand=13, kickerNumbers=[0], otherPair=14)
+LOn the table lies 14 of clubs, 14 of eg, 14 of ge, 2 of rg, and 2 of clurbs
+
+tie1 has 2 of f and 2 of clubs
+(QUADS with value 2 and the kickers [14]
+
+!tie2 has 13 of f and 13 of clubs
+/FULL HOUSE with trips value 14 and the pair 13
+C----- The winner is tie1 with quads (2 high), and the kickers [14]
+
+
+
+IOn the table lies 4 of clubs, 4 of eg, 4 of ge, 2 of rg, and 5 of clurbs
+
+!winner has 2 of f and 2 of clubs
+-FULL HOUSE with trips value 2 and the pair 4
+
+!loser has 13 of f and 6 of clubs
++TRIPS with value 4 and the kickers [13, 6]
+e----- The winner is winner with full house (2 high), and with 4 as highest pair, and the kickers [0]
+
+
+

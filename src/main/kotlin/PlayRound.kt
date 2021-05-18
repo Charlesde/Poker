@@ -1,5 +1,7 @@
+import domain.Player
+
 class PlayRound() {
-    fun playround(deck:Deck, playersNames: List<String>, chips: Int): ResultOfRound{
+    fun playround(deck:Deck, playersNames: List<String>, chips: Int): List<Player> {
         var shuffledDeck = deck.shuffle()
         val listOfPlayer = Dealcards().dealcards(playersNames, shuffledDeck, chips)
         var burnerCard = 1

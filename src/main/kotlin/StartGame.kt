@@ -14,7 +14,7 @@ class StartGame() {
             val result = PlayRound().playround(deck, playersNames, chips)
 
             //  TODO update chips --> use POTS and participants rather than individual chips
-            val nonsense = Chips().devideChipsAfterGame(result, playersNames)
+//            val nonsense = Chips().devideChipsAfterGame(result, playersNames)
 //
 //            for(player in listOfPlayer) {
 //                if(player.chips > 0) activeplayers += 1

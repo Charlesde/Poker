@@ -1,3 +1,5 @@
+import domain.Card
+
 class Deck (var cards: List<Card> = emptyList()){
 
     init {
