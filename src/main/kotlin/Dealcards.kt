@@ -1,3 +1,4 @@
+import domain.Blind
 import domain.Card
 import domain.Player
 
@@ -9,7 +10,8 @@ class Dealcards {
             val player = Player(
                 name = player,
                 id = seat,
-                isDealer = true)
+                isDealer = false,
+                blind = Blind.NO_BLIND) //TODO Should be able to create player with default values isDealer and Blind (add a new constructor)
             player.pocket = mutableListOf(shuffledDeck.elementAt(seat), shuffledDeck.elementAt(seat + players.size))
             listOfPlayer.add(player)
             printResults(listOfPlayer.elementAt(seat))

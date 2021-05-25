@@ -1,11 +1,9 @@
-import domain.Chip
-import domain.Card
-import domain.Player
-import domain.HighestHand
-import java.lang.IllegalStateException
+package domain
+
+import CardFunctions
 
 // TODO: This might seem a lot for one class, but it all related to the 'final' step of the process. So ideally I would make subclasses
-class Table(val flop: List<Card>, val turn: Card, val river: Card) {
+class Table(val flop: List<Card>, val turn: Card?, val river: Card?) {
     fun <T> merge(first: List<T>, second: List<T>): List<T> {
         return first + second
     }
@@ -159,8 +157,8 @@ class Table(val flop: List<Card>, val turn: Card, val river: Card) {
         println("On the table lies ${flop.elementAt(0).number} of ${flop.elementAt(0).color}, " +
                 "${flop.elementAt(1).number} of ${flop.elementAt(1).color}, " +
                 "${flop.elementAt(2).number} of ${flop.elementAt(2).color}, " +
-                "${turn.number} of ${turn.color}, and " +
-                "${river.number} of ${river.color}")
+                "${turn!!.number} of ${turn.color}, and " +
+                "${river!!.number} of ${river.color}")
         for (player in players){
             println()
             print("${player.name} has ")

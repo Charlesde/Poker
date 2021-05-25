@@ -1,13 +1,10 @@
 package domain
 
-import domain.Card
-import domain.HighestHand
-import java.lang.IllegalStateException
-
 data class Player(
     val id: Int,
     val name: String,
-    var isDealer: Boolean
+    var isDealer: Boolean,
+    var blind: Blind
 ) {
 
     var pocket = mutableListOf<Card>()
@@ -37,6 +34,10 @@ data class Player(
 
     fun switchDealer() {
         isDealer = !isDealer
+    }
+
+    fun switchBlind(newBlind: Blind) {
+        blind = newBlind
     }
 
     private fun createChips(): List<Chip>{
