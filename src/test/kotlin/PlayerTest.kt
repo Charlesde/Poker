@@ -1,13 +1,11 @@
 import org.junit.Test
-import org.junit.jupiter.api.assertThrows
-import java.lang.RuntimeException
 import kotlin.test.assertEquals
 
 class PlayerTest {
     @Test
     fun `players get each 2 cards if correct list`(){
         val testlist = PlayerSelection(listOf("bla1","bla2","bla3","bla4")).players
-        val result = Dealcards().dealcards(testlist, Deck().cards, 1)
+        val result = Dealcards().dealcards(testlist, Deck().cards)
         var cards = 0
         for (player in result) {
             val pocket = player.pocket

@@ -7,5 +7,9 @@ enum class Chip(val value: Int) {
     TEN(10),
     TWENTY_FIVE(25),
     FIFTY(50),
-    HUNDRED(100)
+    HUNDRED(100);
+
+    companion object {
+        fun from(value: Int) = values().first { it.value == value }
+    }
 }

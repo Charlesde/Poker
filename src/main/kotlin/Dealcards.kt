@@ -1,26 +1,21 @@
-import domain.Blind
 import domain.Card
 import domain.Player
 
 class Dealcards {
-    fun dealcards(players: List<String>, shuffledDeck: List<Card>, chips: Int): MutableList<Player> {
-        val listOfPlayer: MutableList<Player> = mutableListOf()
-        for (player in players) {
-            val seat = players.indexOf(player)
+    fun dealcards(players: List<String>, shuffledDeck: List<Card>): List<Player> {
+        return players.map { playerName ->
+            val seat = players.indexOf(playerName)
             val player = Player(
-                name = player,
+                name = playerName,
                 id = seat,
-                isDealer = false,
-                blind = Blind.NO_BLIND) //TODO Should be able to create player with default values isDealer and Blind (add a new constructor)
-            player.pocket = mutableListOf(shuffledDeck.elementAt(seat), shuffledDeck.elementAt(seat + players.size))
-            listOfPlayer.add(player)
-            printResults(listOfPlayer.elementAt(seat))
+                pocket = mutableListOf(shuffledDeck.elementAt(seat), shuffledDeck.elementAt(seat + players.size)),
+            )
+            printResults(player)
+            player
         }
-
-        return listOfPlayer
     }
 
-    fun printResults(player: Player) {
+    private fun printResults(player: Player) {
         println(
             "${player.name} got ${player.pocket.elementAt(0).number} of ${
                 player.pocket.elementAt(0).color

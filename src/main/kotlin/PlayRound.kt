@@ -2,9 +2,9 @@ import domain.Player
 import domain.Table
 
 class PlayRound {
-    fun playround(deck:Deck, playersNames: List<String>, chips: Int): List<Player> {
+    fun playround(deck:Deck, playersNames: List<String>): List<Player> {
         var shuffledDeck = deck.shuffle()
-        val listOfPlayer = Dealcards().dealcards(playersNames, shuffledDeck, chips)
+        val listOfPlayer = Dealcards().dealcards(playersNames, shuffledDeck)
         var burnerCard = 1
         val flop = listOf(
             shuffledDeck.elementAt(playersNames.size * 2 + burnerCard),

@@ -11,7 +11,7 @@ class StartGame() {
 
         while (activeplayers > 1) {
             println("Nieuwe ronde, nieuwe kansen")
-            val result = PlayRound().playround(deck, playersNames, chips)
+            val result = PlayRound().playround(deck, playersNames)
 
             //  TODO update chips --> use POTS and participants rather than individual chips
 //            val nonsense = Chips().devideChipsAfterGame(result, playersNames)

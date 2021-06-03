@@ -3,16 +3,16 @@ import domain.Holder
 import extension.replace
 
 class Deck {
+    val cards: List<Card> = init()
 
-    var cards: List<Card> = mutableListOf()
-
-    init {
+    private fun init(): List<Card> {
+        var newDeck = listOf<Card>()
         for (color in arrayOf("clubs", "hearts", "spades", "diamonds"))
 //            Ace = 14, only change to 1 to check for straights, and then count as such
             for (number in 2..14)
-                cards = cards + Card(color, number, Holder.DECK)
+                newDeck = newDeck + Card(color, number, Holder.DECK)
 
-        cards.shuffled()
+        return newDeck.shuffled()
     }
 
     fun shuffle(): List<Card>{
