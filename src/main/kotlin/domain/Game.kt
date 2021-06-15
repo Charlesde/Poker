@@ -9,7 +9,8 @@ data class Game(
     val deck: Deck = Deck(),
     val table: Table = Table(emptyList(), null, null),
     val pot: Int = 0,
-    val turn: Player = players.first { it.blind == Blind.SMALL_BLIND }
+    val turn: Player = players.first { it.blind == Blind.SMALL_BLIND },
+    val gameState: GameState = GameState.BEFORE_FLOP
 ) {
 
 //    fun playRound() {

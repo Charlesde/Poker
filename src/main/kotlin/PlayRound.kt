@@ -3,7 +3,7 @@ import domain.Table
 
 class PlayRound {
     fun playround(deck:Deck, playersNames: List<String>): List<Player> {
-        var shuffledDeck = deck.shuffle()
+        val shuffledDeck = deck.cards.shuffled()
         val listOfPlayer = Dealcards().dealcards(playersNames, shuffledDeck)
         var burnerCard = 1
         val flop = listOf(

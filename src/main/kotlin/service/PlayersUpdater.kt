@@ -2,6 +2,7 @@ package service
 
 import domain.Blind
 import domain.Card
+import domain.Chip
 import domain.Player
 import extension.findNextIndex
 
@@ -44,4 +45,12 @@ class PlayersUpdater {
     private fun Player.determineIfDealer(indexOfPlayer: Int, nextIndexToBeDealer: Int) =
         if (this.isDealer || indexOfPlayer == nextIndexToBeDealer) this.switchDealer() else false
 
+}
+
+fun List<Player>.updateForBet(playerName: String, bet: List<Chip>) = this.map {
+    if (playerName == it.name) {
+        it.copy(chips = it.chips - bet)
+    } else {
+        it
+    }
 }
